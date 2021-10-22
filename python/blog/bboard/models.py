@@ -24,3 +24,6 @@ class Rubric(models.Model):
 		verbose_name = 'Рубрика' 
 		ordering = ['name']
 
+
+class Test(models.Models):
+	pass
