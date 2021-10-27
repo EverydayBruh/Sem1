@@ -6,7 +6,7 @@ class Event(models.Model):
 	title = models.CharField(max_length=50, verbose_name='Название')
 	content = models.TextField(null=True, blank=True, verbose_name='Описание')
 	category = models.ForeignKey('Category', null=True, on_delete=models.PROTECT, verbose_name='Категория')
-	start_time = models.DateTimeField(db_index=True,verbose_name='Время начала') # присваиваем индекс, чтобы сортировать по дате проведения
+	start_time = models.DateTimeField(db_index=True, verbose_name='Время начала') # присваиваем индекс, чтобы сортировать по дате проведения
 	end_time = models.DateTimeField(null=True, blank=True, verbose_name='Время окончания') # не обязательно к заполнению
 	location = models.TextField(null=True, blank=True, verbose_name='Место проведения')
 
