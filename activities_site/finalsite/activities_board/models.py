@@ -3,12 +3,11 @@ from django.db import models
 
 class Event(models.Model):
 
-	title = models.CharField(max_length=50, verbose_name='Название')
+	eventName = models.CharField(max_length=50, verbose_name='Название')
 	content = models.TextField(null=True, blank=True, verbose_name='Описание')
-	# type = models.ForeignKey('Type', null=True, on_delete=models.PROTECT, verbose_name='Категория')
-	type = models.BooleanField(default=False, verbose_name='Онлайн')
-	start_time = models.DateTimeField(db_index=True, verbose_name='Время начала') # присваиваем индекс, чтобы сортировать по дате проведения
-	end_time = models.DateTimeField(null=True, blank=True, verbose_name='Время окончания') # не обязательно к заполнению
+	eventFormat = models.BooleanField(default=False, verbose_name='Онлайн')
+	startTime = models.DateTimeField(db_index=True, verbose_name='Время начала') # присваиваем индекс, чтобы сортировать по дате проведения
+	endTime = models.DateTimeField(null=True, blank=True, verbose_name='Время окончания') # не обязательно к заполнению
 	location = models.TextField(null=True, blank=True, verbose_name='Место проведения')
 
 	published = models.DateTimeField(auto_now_add=True, db_index=True,verbose_name='Время публикации')
@@ -24,7 +23,7 @@ class Event(models.Model):
 		ordering = ['-published']
 
 	def __str__(self):
-		return self.title
+		return self.eventName
 
 class User(models.Model):
 

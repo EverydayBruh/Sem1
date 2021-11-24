@@ -8,7 +8,7 @@ class CategorySerializer(serializers.ModelSerializer):
 class EventSerializer(serializers.ModelSerializer):
     class Meta:
         model = Event
-        fields = ('id', 'title','content','type','start_time','end_time','location','published','organizer','category')
+        fields = ('id', 'eventName','content','eventFormat','startTime','endTime','location','published','organizer','category')
 
 
 class UserSerializer(serializers.ModelSerializer):
