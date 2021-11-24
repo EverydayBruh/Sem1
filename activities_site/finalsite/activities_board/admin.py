@@ -2,7 +2,7 @@
 from django.contrib import admin
 # from django.contrib.auth.admin import UserAdmin
 # from django.contrib.auth.models import User
-from .models import Event, Category, User
+from .models import Event, Category, User, Comment
 
 
 class EventAdmin(admin.ModelAdmin):
@@ -30,4 +30,5 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Category)
+admin.site.register(Comment)
 
