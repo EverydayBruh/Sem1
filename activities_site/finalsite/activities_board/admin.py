@@ -6,10 +6,10 @@ from .models import Event, Category, User, Comment
 
 
 class EventAdmin(admin.ModelAdmin):
-    list_display = ('title', 'content', 'start_time', 'published','type','location')
+    list_display = ('eventName', 'content', 'startTime', 'published','eventFormat','location')
     #filter_horizontal = ('category',)
-    list_display_links = ('title', 'content')
-    search_fields = ('title', 'content', )
+    list_display_links = ('eventName', 'content')
+    search_fields = ('eventName', 'content', )
 
 
 admin.site.register(Event, EventAdmin)
