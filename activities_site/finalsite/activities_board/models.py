@@ -15,7 +15,7 @@ class Event(models.Model):
 	# автоматически вносим текущее время, присваиваем индекс, чтобы сортировать по дате публикаци
 	organizer = models.ForeignKey('User', on_delete=models.PROTECT, verbose_name='Организатор')
 
-	category = models.ManyToManyField('Category') # связи категорий с ивентами
+	category = models.ManyToManyField('Category', blank=True, verbose_name='Категория') # связи категорий с ивентами
 
 
 	class Meta:
@@ -32,7 +32,7 @@ class User(models.Model):
 	surname = models.CharField(max_length=30, verbose_name='Фамилия')
 	email = models.EmailField()
 	password = models.CharField(max_length=30, verbose_name='Пароль')
-	registrations = models.ManyToManyField(Event) # здесь будут связи пользователей с ивентами
+	registrations = models.ManyToManyField(Event, blank=True, verbose_name='Зарегестрирован на мероприятия') # здесь будут связи пользователей с ивентами
 
 	class Meta:
 		verbose_name = 'Пользователь'
@@ -53,16 +53,11 @@ class Category(models.Model):
 	def __str__(self):
 		return self.title
 
-class Type(models.Model):
 
-	title = models.CharField(max_length=50, verbose_name='Название')
-
-	class Meta:
-		verbose_name = 'Тип'
 
 class Comment(models.Model):
-	event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='comments')
-	name = models.CharField(max_length=80)
+	event = models.ForeignKey(Event, on_delete=models.CASCADE, verbose_name='Мероприятие')
+	author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Автор комментария')
 	body = models.TextField()
 	published = models.DateTimeField(auto_now_add=True)
 
@@ -71,4 +66,6 @@ class Comment(models.Model):
 		verbose_name_plural = 'Комментарии'
 		ordering = ['published']
 
+	def __str__(self):
+		return self.body
 #change
