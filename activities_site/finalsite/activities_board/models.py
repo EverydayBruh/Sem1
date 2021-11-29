@@ -26,12 +26,13 @@ class Event(models.Model):
 		return self.eventName
 
 class User(models.Model):
-
-	name = models.CharField(max_length=30, verbose_name='Имя')
-	surname = models.CharField(max_length=30, verbose_name='Фамилия')
+	username = models.CharField(max_length=30, verbose_name='Никнейм')
+	name = models.CharField(max_length=20, verbose_name='Имя')
+	surname = models.CharField(max_length=20, verbose_name='Фамилия')
 	email = models.EmailField()
 	password = models.CharField(max_length=30, verbose_name='Пароль')
-	registrations = models.ManyToManyField(Event, blank=True, verbose_name='Зарегестрирован на мероприятия') # здесь будут связи пользователей с ивентами
+	events = models.ManyToManyField(Event, blank=True, verbose_name='Зарегестрирован на мероприятия', through='Registrations') # здесь будут связи пользователей с ивентами
+	userStatus = models.IntegerField(default=0)
 
 	class Meta:
 		verbose_name = 'Пользователь'
@@ -39,6 +40,18 @@ class User(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class Registrations(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	event = models.ForeignKey(Event, on_delete=models.CASCADE)
+
+	def save(self, *args, **kwargs):
+		q = Registrations.objects.filter(
+			user=self.user,
+			event=self.event
+		)
+		if q.exists() <= 0:
+			super(Registrations, self).save(*args, **kwargs)
 
 
 class Category(models.Model):
@@ -67,4 +80,6 @@ class Comment(models.Model):
 
 	def __str__(self):
 		return self.body
+
+
 #change

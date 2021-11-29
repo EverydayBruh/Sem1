@@ -1,6 +1,6 @@
 from django.http import JsonResponse
-from .models import Category, Event, User
-from .serializers import CategorySerializer, EventSerializer, UserSerializer
+from .models import Category, Event, User, Registrations
+from .serializers import CategorySerializer, EventSerializer, UserSerializer, RegistationsSerializer
 from rest_framework import status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -35,7 +35,7 @@ def api_event_detail(request, pk):
         serializer = EventSerializer(event)
         return Response(serializer.data)
     elif request.method == 'PATCH':
-        serializer = EventSerializer(event, data=request.data)
+        serializer = EventSerializer(event, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
@@ -51,3 +51,44 @@ def api_user(request):
         user = User.objects.all()
         serializer = UserSerializer(user, many=True)
         return Response(serializer.data)
+
+@api_view(['POST'])
+def api_user_registration(request):
+    if request.method == 'POST':
+        serializer = UserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['POST'])
+def api_eventEntry(request):
+    if request.method == 'POST':
+        serializer = RegistationsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # event.delete()
+        # return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['PATCH'])
+def api_eventLeave(request):
+    if request.method == 'PATCH':
+        registration = Registrations.objects.get(user=request.data['user'], event=request.data['event'])
+        registration.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def api_getEventsByUserId(request, userId):
+    if request.method == 'GET':
+        user = User.objects.get(pk=userId)
+        event = user.events
+        serializer = EventSerializer(event, many=True)
+        return Response(serializer.data)
+
+
+
+
+
