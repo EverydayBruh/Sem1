@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import api_category, api_event, api_user, api_event_detail, api_eventEntry, api_eventLeave, api_user_registration, api_getEventsByUserId
+from .views import api_category, api_event, api_user, api_event_detail, api_eventEntry, api_eventLeave, api_user_registration, api_getEventsByUserId, api_getEventsById
 
 urlpatterns = [
 	path('api/category', api_category),
@@ -9,6 +9,7 @@ urlpatterns = [
 	path('api/user/eventEntry', api_eventEntry),
 	path('api/user/eventLeave', api_eventLeave),
 	path('api/auth/registration', api_user_registration),
-	path('api/events/getEventsByUserId/<int:userId>', api_getEventsByUserId)
+	path('api/events/getEventsByUserId/<int:userId>', api_getEventsByUserId),
+	path('api/events/filter=<str:id_category>', api_getEventsById),
 
 ]

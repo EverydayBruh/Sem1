@@ -24,7 +24,7 @@ def api_filter_events(request):
 
 
 @api_view(['GET'])
-def api_get_events_by_id(request, id_category):
+def api_getEventsById(request, id_category):
     tags = id_category.split("&")
     tags = [int(tags[i]) for i in range(len(tags))]
     event = Event.objects.filter(category=tags[0])
