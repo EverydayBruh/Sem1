@@ -53,6 +53,12 @@ class Registrations(models.Model):
 		if q.exists() <= 0:
 			super(Registrations, self).save(*args, **kwargs)
 
+	class Meta:
+		ordering = ['user']
+
+	def __str__(self):
+		return self.user.name +' - '+ self.event.eventName
+
 
 class Category(models.Model):
 
