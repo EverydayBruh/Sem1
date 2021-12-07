@@ -14,6 +14,29 @@ def api_category(request):
         return Response(serializer.data)
 
 
+@api_view(['GET'])
+def api_filter_events(request):
+    if request.method == 'GET':
+        event = Event.objects.filter(category=2)
+        event = event.filter(category=3)
+        serializer = EventSerializer(event, many=True)
+        return Response(serializer.data)
+
+
+@api_view(['GET'])
+def api_get_events_by_id(request, id_category):
+    tags = id_category.split("&")
+    tags = [int(tags[i]) for i in range(len(tags))]
+    event = Event.objects.filter(category=tags[0])
+
+    for i in range(1, len(tags)):
+        event = event.filter(category=tags[i])
+
+    serializer = EventSerializer(event, many=True)
+    return Response(serializer.data)
+
+
+
 @api_view(['GET', 'POST'])
 def api_event(request):
     if request.method == 'GET':
@@ -26,6 +49,7 @@ def api_event(request):
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 @api_view(['GET', 'PATCH', 'DELETE'])
