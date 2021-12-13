@@ -14,6 +14,7 @@ class Event(models.Model):
 	# автоматически вносим текущее время, присваиваем индекс, чтобы сортировать по дате публикаци
 	organizer = models.ForeignKey('User', on_delete=models.PROTECT, verbose_name='Организатор')
 
+
 	category = models.ManyToManyField('Category', blank=True, verbose_name='Категория') # связи категорий с ивентами
 
 
