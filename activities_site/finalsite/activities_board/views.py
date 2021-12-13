@@ -6,7 +6,6 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from django.contrib.auth import authenticate, login, logout
 
-
 @api_view(['POST'])
 def api_login(request):
     username = request.POST['username']
@@ -18,8 +17,6 @@ def api_login(request):
 @api_view(['POST'])
 def api_logout(request):
     logout(request)
-
-
 
 @api_view(['GET'])
 def api_category(request):
@@ -69,19 +66,22 @@ def api_event(request):
 
 @api_view(['GET', 'PATCH', 'DELETE'])
 def api_event_detail(request, pk):
-    event = Event.objects.get(pk=pk)
-    if request.method == 'GET':
-        serializer = EventSerializer(event)
-        return Response(serializer.data)
-    elif request.method == 'PATCH':
-        serializer = EventSerializer(event, data=request.data, partial=True)
-        if serializer.is_valid():
-            serializer.save()
+    try:
+        event = Event.objects.get(pk=pk)
+        if request.method == 'GET':
+            serializer = EventSerializer(event)
             return Response(serializer.data)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    elif request.method == 'DELETE':
-        event.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        elif request.method == 'PATCH':
+            serializer = EventSerializer(event, data=request.data, partial=True)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_202_ACCEPTED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        elif request.method == 'DELETE':
+            event.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+    except:
+        return Response(status=status.HTTP_404_NOT_FOUND)
 
 
 @api_view(['GET'])
@@ -97,7 +97,7 @@ def api_user_registration(request):
         serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -106,28 +106,27 @@ def api_eventEntry(request):
         serializer = RegistationsSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data)
+            return Response(status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-        # event.delete()
-        # return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @api_view(['PATCH'])
 def api_eventLeave(request):
     if request.method == 'PATCH':
-        registration = Registrations.objects.get(user=request.data['user'], event=request.data['event'])
-        registration.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        try:
+            registration = Registrations.objects.get(user=request.data['user'], event=request.data['event'])
+            registration.delete()
+            return Response(status=status.HTTP_200_OK)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
 @api_view(['GET'])
 def api_getEventsByUserId(request, userId):
     if request.method == 'GET':
-        user = User.objects.get(pk=userId)
-        event = user.events
-        serializer = EventSerializer(event, many=True)
-        return Response(serializer.data)
-
-
-
-
-
+        try:
+            user = User.objects.get(pk=userId)
+            event = user.events
+            serializer = EventSerializer(event, many=True)
+            return Response(serializer.data)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
